@@ -3,11 +3,22 @@ package org.main.library.service;
 import java.sql.Date;
 import java.util.List;
 
-import javax.print.attribute.standard.Media;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.main.library.entity.*;
+import org.main.library.DAO.BookDAO;
+import org.main.library.DAO.LibraryDAO;
+import org.main.library.DAO.MemberDAO;
+import org.main.library.DAO.PublisherDAO;
+import org.main.library.entity.Book;
+import org.main.library.entity.BorrowsDTO;
+import org.main.library.entity.Member;
+import org.main.library.entity.Publisher;
 
 @Path("/service")
 public class LibraryService{
@@ -26,7 +37,7 @@ public class LibraryService{
 		member.setExpireDate(expireDate);
 		
 		try {
-			LibraryDAO.insertMember(member);
+			MemberDAO.insertMember(member);
 			return "Member with id:" + member.getId() + " was sucessfuly inserted :)";
 		}catch(Exception e) {
 			return "Member with id:" + member.getId() + " was NOT sucessfuly inserted :(";
@@ -40,7 +51,7 @@ public class LibraryService{
 	public String createPublisher(Publisher publisher) {
 		
 		try {
-			LibraryDAO.insertPublisher(publisher);
+			PublisherDAO.insertPublisher(publisher);
 			return "Member with id:" + publisher.getId() + " was sucessfuly inserted :)";
 		}catch(Exception e) {
 			return "Member with id:" + publisher.getId() + " was NOT sucessfuly inserted :(";
@@ -53,7 +64,7 @@ public class LibraryService{
 	public String createBook(@QueryParam("id") String id,Book book) {
 		
 		try {
-			LibraryDAO.insertBook(id,book);
+			BookDAO.insertBook(id,book);
 			return "Member with id:" + book.getId() + " was sucessfuly inserted :)";
 		}catch(Exception e) {
 			return "Member with id:" + book.getId() + " was NOT sucessfuly inserted :(";
@@ -85,7 +96,7 @@ public class LibraryService{
 			
 			LibraryDAO.insertReturns(borrowsDTO);
 			
-			return "Member : " + LibraryDAO.getMember(borrowsDTO.getMemberId()).getName() + " returned the book: " + LibraryDAO.getBook(borrowsDTO.getBookId()).getTitle() ;			
+			return "Member : " + MemberDAO.getMember(borrowsDTO.getMemberId()).getName() + " returned the book: " + BookDAO.getBook(borrowsDTO.getBookId()).getTitle() ;			
 			
 		} catch (Exception e) {
 			return "Error";
@@ -97,7 +108,7 @@ public class LibraryService{
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Book> getAllBooks (){
 		
-		List<Book> books = LibraryDAO.getBooks();
+		List<Book> books = BookDAO.getBooks();
 		
 		return books;
 		
@@ -108,7 +119,7 @@ public class LibraryService{
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Member> getAllMembers(){
 		
-		List<Member> members = LibraryDAO.getMembers();
+		List<Member> members = MemberDAO.getMembers();
 		
 		return members;
 		
